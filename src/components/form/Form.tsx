@@ -106,7 +106,6 @@ const Form = ({ templateState, formLocal }: Props) => {
 
         return newForm;
       });
-      console.log(arr);
       if (arr && arr.length > 0) {
         setFormFields(arr);
       } else {
