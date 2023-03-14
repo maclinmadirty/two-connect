@@ -36,12 +36,16 @@ const Main = () => {
     }
   }, [dispatch]);
 
+  const handleSaveTemplate = () => {
+    localStorage.setItem("template", JSON.stringify(template));
+  };
+
   return (
     <>
       <Template
-        templateState={template}
+      templateState={template} handleSaveTemplate={handleSaveTemplate}
       />
-      <Form templateState={template} formLocal={formLocal} />
+      <Form templateState={template} formLocal={formLocal}  handleSaveTemplate={handleSaveTemplate}/>
     </>
   );
 };

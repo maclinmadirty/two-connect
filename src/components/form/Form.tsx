@@ -20,9 +20,10 @@ import ConditionalBox from "../shared/conditional-box/ConditionalBox";
 interface Props {
   templateState: ITemplate | null;
   formLocal: FormField[];
+  handleSaveTemplate: () => void;
 }
 
-const Form = ({ templateState, formLocal }: Props) => {
+const Form = ({ templateState, formLocal, handleSaveTemplate }: Props) => {
   // const [templateState, setTemplateState] = useState<ITemplate>(
   //   JSON.parse(localStorage.getItem("template") || "")
   // );
@@ -184,7 +185,7 @@ const Form = ({ templateState, formLocal }: Props) => {
                 <InputBox
                   key={input.id}
                   field={input}
-                  onInputChange={(f) => handleInputChange(f, form)}
+                  onInputChange={(f: FieldInput) => handleInputChange(f, form)}
                 />
               ))}
           </div>
@@ -195,7 +196,7 @@ const Form = ({ templateState, formLocal }: Props) => {
                 <SelectBox
                   key={select.id}
                   field={select}
-                  onSelectChange={(f) => handleSelectChange(f, form)}
+                  onSelectChange={(f: FieldSelect) => handleSelectChange(f, form)}
                 />
               ))}
           </div>
@@ -206,7 +207,7 @@ const Form = ({ templateState, formLocal }: Props) => {
                 <ConditionalBox
                   key={select.id}
                   field={select}
-                  onConditionalChange={(f) => handleConditionalChange(f, form)}
+                  onConditionalChange={(f: FieldConditional) => handleConditionalChange(f, form)}
                 />
               ))}
           </div>
@@ -217,6 +218,7 @@ const Form = ({ templateState, formLocal }: Props) => {
 
   const handleSaveClick = () => {
     localStorage.setItem("form", JSON.stringify(formFields));
+    handleSaveTemplate();
   };
 
   return (
