@@ -13,9 +13,10 @@ import { setTemplate } from "../../features/template/templateSlice";
 
 interface Props {
   templateState: ITemplate | null;
+  handleSaveTemplate: () => void;
 }
 
-const Template = ({ templateState }: Props) => {
+const Template = ({ templateState, handleSaveTemplate }: Props) => {
   const dispatch = useDispatch();
   // const [templateState, setTemplateState] = useState<ITemplate>({
   //   noOfForms: 0,
@@ -39,10 +40,7 @@ const Template = ({ templateState }: Props) => {
     return new FieldInput(key, label, key, "number", value);
   };
 
-  const handleSaveClick = () => {
-    console.log(templateState);
-    localStorage.setItem("template", JSON.stringify(templateState));
-  };
+
 
   return (
     <>
@@ -56,7 +54,7 @@ const Template = ({ templateState }: Props) => {
         ))}
       </div>
       <div>
-        <Button variant="contained" onClick={handleSaveClick}>
+        <Button variant="contained" onClick={handleSaveTemplate}>
           Save Template
         </Button>
       </div>

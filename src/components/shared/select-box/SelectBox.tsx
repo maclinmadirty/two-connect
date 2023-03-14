@@ -1,16 +1,20 @@
 import React, { ChangeEvent } from "react";
+
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { FieldSelect } from "../../../models/field.model";
 
+import withResize from "../../hoc/withResize";
+
 interface Props {
   field: FieldSelect;
+  windowInnerWidth: number;
   onSelectChange: (field: FieldSelect) => void;
 }
 
-const SelectBox = ({ field, onSelectChange }: Props) => {
+const SelectBox = ({ field, windowInnerWidth, onSelectChange }: Props) => {
   const handleSelectChange = (
     event: SelectChangeEvent<unknown>,
     fieldCopy: FieldSelect
@@ -20,7 +24,10 @@ const SelectBox = ({ field, onSelectChange }: Props) => {
   };
 
   return (
-    <FormControl style={{ marginRight: "8px" }}>
+    <FormControl
+      style={{ marginRight: "8px" }}
+      size={windowInnerWidth < 1025 ? "small" : "medium"}
+    >
       <InputLabel id={`${field.id}-label`}>{field.label}</InputLabel>
       <Select
         labelId={`${field.id}-label`}
@@ -39,4 +46,4 @@ const SelectBox = ({ field, onSelectChange }: Props) => {
   );
 };
 
-export default SelectBox;
+export default withResize(SelectBox);

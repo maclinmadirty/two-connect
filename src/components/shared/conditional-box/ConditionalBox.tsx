@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
+
 import {
   FieldConditional,
   FieldInput,
@@ -13,12 +13,15 @@ import {
 import InputBox from "../input-box/InputBox";
 import SelectBox from "../select-box/SelectBox";
 
+import withResize from "../../hoc/withResize";
+
 interface Props {
   field: FieldConditional;
+  windowInnerWidth: number;
   onConditionalChange: (field: FieldConditional) => void;
 }
 
-const ConditionalBox = ({ field, onConditionalChange }: Props) => {
+const ConditionalBox = ({ field, windowInnerWidth, onConditionalChange }: Props) => {
   const handleSelectChange = (
     event: SelectChangeEvent<unknown>,
     fieldCopy: FieldConditional
@@ -49,6 +52,7 @@ const ConditionalBox = ({ field, onConditionalChange }: Props) => {
     >
       <FormControl
         style={{ marginRight: "8px", marginBottom: "8px", marginTop: "8px" }}
+        size={windowInnerWidth < 1025 ? "small" : "medium"}
       >
         <InputLabel id={`${field.id}-label`}>{field.label}</InputLabel>
         <Select
@@ -68,16 +72,16 @@ const ConditionalBox = ({ field, onConditionalChange }: Props) => {
       {field.value === "input" ? (
         <InputBox
           field={field.inputField}
-          onInputChange={(f) => handleConditionalInputChange(f, field)}
+          onInputChange={(f: FieldInput) => handleConditionalInputChange(f, field)}
         />
       ) : field.value === "select" ? (
         <SelectBox
           field={field.selectField}
-          onSelectChange={(f) => handleConditionalSelectChange(f, field)}
+          onSelectChange={(f: FieldSelect) => handleConditionalSelectChange(f, field)}
         />
       ) : null}
     </div>
   );
 };
 
-export default ConditionalBox;
+export default withResize(ConditionalBox);
