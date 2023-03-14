@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
+
+import {useSelector, useDispatch} from "react-redux"
+
 import Form from "../../components/form/Form";
 import Template from "../../components/template/Template";
+import { setTemplate } from "../../features/template/templateSlice";
 import { FormField } from "../../models/field.model";
 import { ITemplate } from "../../models/template.model";
+import { RootState } from "../../store/store";
 
 // interface Props {
 //   field: FieldInput;
@@ -10,12 +15,11 @@ import { ITemplate } from "../../models/template.model";
 // }
 
 const Main = () => {
-  const [templateState, setTemplateState] = useState<ITemplate>({
-    noOfForms: 0,
-    noOfInputs: 0,
-    noOfSelects: 0,
-    noOfConditionals: 0,
-  });
+  const dispatch = useDispatch();
+
+  const {template} = useSelector((state: RootState) => ({
+    template: state.template.template
+  }))
 
   const [formLocal, setFormLocal] = useState<FormField[]>([]);
 
@@ -23,21 +27,21 @@ const Main = () => {
     const localTemplate = localStorage.getItem("template");
     const localForm = localStorage.getItem("form");
     if (localTemplate) {
-      setTemplateState(JSON.parse(localTemplate));
+      // setTemplateState(JSON.parse(localTemplate));
+      dispatch(setTemplate(JSON.parse(localTemplate) as ITemplate));
     }
 
     if (localForm) {
       setFormLocal(JSON.parse(localForm));
     }
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
       <Template
-        templateState={templateState}
-        setTemplateState={setTemplateState}
+        templateState={template}
       />
-      <Form templateState={templateState} formLocal={formLocal} />
+      <Form templateState={template} formLocal={formLocal} />
     </>
   );
 };

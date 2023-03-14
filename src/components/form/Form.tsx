@@ -18,7 +18,7 @@ import SelectBox from "../shared/select-box/SelectBox";
 import ConditionalBox from "../shared/conditional-box/ConditionalBox";
 
 interface Props {
-  templateState: ITemplate;
+  templateState: ITemplate | null;
   formLocal: FormField[];
 }
 
@@ -29,88 +29,94 @@ const Form = ({ templateState, formLocal }: Props) => {
   const [formFields, setFormFields] = useState<FormField[]>([]);
 
   useEffect(() => {
-    const noOfForms = templateState.noOfForms;
-    const fieldsOnlyTemplate = { ...templateState };
-    delete fieldsOnlyTemplate.noOfForms;
+    if (templateState) {
+      const noOfForms = templateState.noOfForms;
+      const fieldsOnlyTemplate = { ...templateState };
+      delete fieldsOnlyTemplate.noOfForms;
 
-    if (noOfForms && noOfForms > 0) {
-      let arr = new Array(noOfForms).fill("").map((_, i) => {
-        const formId = `form-${i + 1}` as string;
-        const formName = `Form ${i + 1}` as string;
-        const newForm = new FormField(formId, formName);
-        const inputFields = new Array(templateState.noOfInputs)
-          .fill("")
-          .map((_, i) => {
-            const id = `${formId}-input-${i + 1}` as string;
-            const label = `Input ${i + 1}` as string;
-            return new FieldInput(id, label, id, "text", "");
-          });
-        const selectFields = new Array(templateState.noOfSelects)
-          .fill("")
-          .map((_, i) => {
-            const id = `${formId}-select-${i + 1}` as string;
-            const label = `Select ${i + 1}` as string;
-            const options: FieldOption[] = [
-              { id: `${id}-option-1`, label: "Option 1", value: "1" },
-              { id: `${id}-option-2`, label: "Option 2", value: "2" },
-            ];
-            return new FieldSelect(id, label, id, options[0].value, options);
-          });
-        const conditionalFields = new Array(templateState.noOfConditionals)
-          .fill("")
-          .map((_, i) => {
-            const id = `${formId}-conditional-${i + 1}` as string;
-            const label = `Conditional ${i + 1}` as string;
-            const options = [
-              { id: `${id}-option-1`, label: "Input", value: "input" },
-              { id: `${id}-option-2`, label: "Select", value: "select" },
-              { id: `${id}-option-3`, label: "None", value: "none" },
-            ];
-            const inputId = `${id}-input` as string;
-            const inputLabel = `${label} Input` as string;
-            const conditionalInputField = new FieldInput(
-              inputId,
-              inputLabel,
-              inputId,
-              "text",
-              ""
-            );
-            const selectId = `${id}-select` as string;
-            const selectLabel = `${label} Select` as string;
-            const conditionalSelectOptions: FieldOption[] = [
-              { id: `${selectId}-option-1`, label: "Option 1", value: "1" },
-              { id: `${selectId}-option-2`, label: "Option 2", value: "2" },
-            ];
+      if (noOfForms && noOfForms > 0) {
+        let arr = new Array(noOfForms).fill("").map((_, i) => {
+          const formId = `form-${i + 1}` as string;
+          const formName = `Form ${i + 1}` as string;
+          const newForm = new FormField(formId, formName);
+          const inputFields = new Array(templateState.noOfInputs)
+            .fill("")
+            .map((_, i) => {
+              const id = `${formId}-input-${i + 1}` as string;
+              const label = `Input ${i + 1}` as string;
+              return new FieldInput(id, label, id, "text", "");
+            });
+          const selectFields = new Array(templateState.noOfSelects)
+            .fill("")
+            .map((_, i) => {
+              const id = `${formId}-select-${i + 1}` as string;
+              const label = `Select ${i + 1}` as string;
+              const options: FieldOption[] = [
+                { id: `${id}-option-1`, label: "Option 1", value: "1" },
+                { id: `${id}-option-2`, label: "Option 2", value: "2" },
+              ];
+              return new FieldSelect(id, label, id, options[0].value, options);
+            });
+          const conditionalFields = new Array(templateState.noOfConditionals)
+            .fill("")
+            .map((_, i) => {
+              const id = `${formId}-conditional-${i + 1}` as string;
+              const label = `Conditional ${i + 1}` as string;
+              const options = [
+                { id: `${id}-option-1`, label: "Input", value: "input" },
+                { id: `${id}-option-2`, label: "Select", value: "select" },
+                { id: `${id}-option-3`, label: "None", value: "none" },
+              ];
+              const inputId = `${id}-input` as string;
+              const inputLabel = `${label} Input` as string;
+              const conditionalInputField = new FieldInput(
+                inputId,
+                inputLabel,
+                inputId,
+                "text",
+                ""
+              );
+              const selectId = `${id}-select` as string;
+              const selectLabel = `${label} Select` as string;
+              const conditionalSelectOptions: FieldOption[] = [
+                { id: `${selectId}-option-1`, label: "Option 1", value: "1" },
+                { id: `${selectId}-option-2`, label: "Option 2", value: "2" },
+              ];
 
-            const conditionalSelectField = new FieldSelect(
-              selectId,
-              selectLabel,
-              selectId,
-              conditionalSelectOptions[0].value,
-              conditionalSelectOptions
-            );
-            return new FieldConditional(
-              id,
-              label,
-              id,
-              options[0].value as ConditionalFieldType,
-              options,
-              conditionalInputField,
-              conditionalSelectField
-            );
-          });
+              const conditionalSelectField = new FieldSelect(
+                selectId,
+                selectLabel,
+                selectId,
+                conditionalSelectOptions[0].value,
+                conditionalSelectOptions
+              );
+              return new FieldConditional(
+                id,
+                label,
+                id,
+                options[0].value as ConditionalFieldType,
+                options,
+                conditionalInputField,
+                conditionalSelectField
+              );
+            });
 
-        newForm.addInputFields(inputFields);
-        newForm.addSelectFields(selectFields);
-        newForm.addConditionalFields(conditionalFields);
+          newForm.addInputFields(inputFields);
+          newForm.addSelectFields(selectFields);
+          newForm.addConditionalFields(conditionalFields);
 
-        return newForm;
-      });
-      if (arr && arr.length > 0) {
-        setFormFields(arr);
+          return newForm;
+        });
+        if (arr && arr.length > 0) {
+          setFormFields(arr);
+        } else {
+          setFormFields([]);
+        }
       } else {
         setFormFields([]);
       }
+    } else {
+      setFormFields([]);
     }
   }, [templateState]);
 
